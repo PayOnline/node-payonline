@@ -121,7 +121,7 @@ module.exports = function (inputOptions) {
 		process.nextTick(callback.bind(null, null, options.processingUrl + "/ru/payment/?" + querystring.stringify(signedParams)));
 	};
 
-	var parseResponse = function (body, callback) {
+	var parseCallback = function (body, callback) {
 		var inputParams = querystring.parse(body),
 			signedParams = sign(inputParams, [
 				"DateTime",
@@ -144,5 +144,5 @@ module.exports = function (inputOptions) {
 	this.partialConfirm = partialConfirm;
 	this.confirm = confirm;
 	this.getPaymentUrl = getPaymentUrl;
-	this.parseResponse = parseResponse;
+	this.parseCallback = parseCallback;
 };
