@@ -1,0 +1,14 @@
+err
+null
+result
+https://secure.payonlinesystem.loc/ru/payment/?OrderId=TestOrderIdFromConsole&Amount=3.00&Currency=RUB&MerchantId=16&ContentType=text&SecurityKey=58fdce4970da1a057ddbf1ac4410079a
+err
+null
+result
+{ Id: '5923441',
+  Operation: 'Auth',
+  Result: 'Ok',
+  Code: '200',
+  Status: 'PreAuthorized',
+  rebillAnchor: 'zayr9g0pAftxg-z4.RKugb8kJ3VZGydSLT6y71R5PpE=',
+  binCountry: 'US' }
