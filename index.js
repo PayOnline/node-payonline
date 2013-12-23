@@ -55,7 +55,7 @@ module.exports = function (inputOptions) {
 
 			var result = querystring.parse(body);
 			if (!result) {
-				return callback("Unable to parse body")
+				return callback("Unable to parse body");
 			}
 
 			return callback(null, result);
@@ -78,31 +78,61 @@ module.exports = function (inputOptions) {
 		], callback);
 	};
 
+	var voidTransaction = function (transactionId, callback) {
+		return query("/payment/transaction/void/", {
+			"TransactionId": transactionId
+		}, [
+			"MerchantId",
+			"TransactionId",
+			"PrivateSecurityKey"
+		], callback);
+	};
+
+	var partialConfirm = function (transactionId, partialAmount, callback) {
+		return query("/payment/transaction/complete/", {
+			"TransactionId": transactionId,
+			"Amount": partialAmount
+		}, [
+			"MerchantId",
+			"TransactionId",
+			"Amount",
+			"PrivateSecurityKey"
+		], callback);
+	};
+
+	var confirm = function (transactionId, callback) {
+		return query("/payment/transaction/complete/", {
+			"TransactionId": transactionId
+		}, [
+			"MerchantId",
+			"TransactionId",
+			"PrivateSecurityKey"
+		], callback);
+	};
+
 	var getPaymentUrl = function (params, callback) {
-		var query = sign(params, [
+		var signedParams = sign(params, [
 			"MerchantId",
 			"OrderId",
 			"Amount",
 			"Currency",
 			"PrivateSecurityKey"
 		]);
-		process.nextTick(callback.bind(null, null, options.processingUrl + "/ru/payment/?" + querystring.stringify(query)));
+		process.nextTick(callback.bind(null, null, options.processingUrl + "/ru/payment/?" + querystring.stringify(signedParams)));
 	};
 
 	var parseResponse = function (body, callback) {
-//lang=ru&City=test&Code=1999&SecurityKey=f8b190d7b5b77f44bcdbcddc4f099686&Zip=&Country=US&PaymentAmount=3.00&ECI=7&DateTime=2013-12-23+15%3A57%3A43&ErrorCode=3&Currency=RUB&Amount=3.00&CardNumber=%2A%2A%2A%2A%2A%2A%2A%2A%2A%2A%2A%2A1111&OrderId=TestOrderIdFromConsole&CardHolder=TEST+CARD&Provider=Card&PaymentCurrency=RUB&ContentType=text&TransactionID=5923442
 		var inputParams = querystring.parse(body),
 			signedParams = sign(inputParams, [
 				"DateTime",
-				"TransactionId",
+				"TransactionID",
 				"OrderId",
 				"Amount",
 				"Currency",
 				"PrivateSecurityKey"
 			]);
 
-		if (inputParams["SecurityKey"] !== signedParams["SecurityKey"]) {
-			console.log(inputParams["SecurityKey"] + "!=" + signedParams["SecurityKey"]);
+		if (inputParams.SecurityKey !== signedParams.SecurityKey) {
 			return process.nextTick(callback.bind(null, "Security key mismatch"));
 		}
 
@@ -110,6 +140,9 @@ module.exports = function (inputOptions) {
 	};
 
 	this.auth = auth;
+	this.void = voidTransaction;
+	this.partialConfirm = partialConfirm;
+	this.confirm = confirm;
 	this.getPaymentUrl = getPaymentUrl;
 	this.parseResponse = parseResponse;
 };
