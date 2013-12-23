@@ -1,0 +1,22 @@
+{
+  "name": "payonline",
+  "version": "0.0.0",
+  "description": "Wrapper for PayOnline API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PayOnline/node-payonline.git"
+  },
+  "author": "PayOnline",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/PayOnline/node-payonline/issues"
+  },
+  "dependencies": {
+    "underscore": "~1.5.2",
+    "request": "~2.30.0"
+  }
+}
